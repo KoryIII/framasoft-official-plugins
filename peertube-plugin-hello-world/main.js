@@ -1,5 +1,6 @@
 async function register ({
   registerHook,
+  getRouter,
   registerSetting,
   settingsManager,
   storageManager,
@@ -51,6 +52,10 @@ async function register ({
   console.log(value)
 
   await storageManager.storeData('toto', 'hello' + new Date())
+  await storageManager.storeData('toto2', { toto2: [ 'user 1', 'user 2' ] })
+
+  console.log(await storageManager.getData('toto2'))
+  console.log(await storageManager.getData('toto2.toto2'))
 
   videoLanguageManager.addLanguage('al_bhed', 'Al Bhed')
   videoLanguageManager.deleteLanguage('fr')
@@ -60,6 +65,13 @@ async function register ({
 
   videoLicenceManager.addLicence(42, 'Best licence')
   videoLicenceManager.deleteLicence(7) // Public domain
+
+  const router = getRouter()
+  router.get('/ping', (req, res) => res.json({ message: 'pong' }))
+
+  router.post('/form/post/mirror', (req, res) => {
+    res.json(req.body)
+  })
 }
 
 async function unregister () {
