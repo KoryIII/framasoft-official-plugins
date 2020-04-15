@@ -29,6 +29,20 @@ function register ({ registerHook, peertubeHelpers }) {
     }
   })
 
+  peertubeHelpers.showModal({
+    title: 'my super modal',
+    content: 'hello, do you like my modal?',
+    close: true,
+    cancel: {
+      value: 'Cancel',
+      action: () => console.log('Canceled')
+    },
+    confirm: {
+      value: 'Confirm',
+      action: () => console.log('Confirmed')
+    }
+  })
+
 }
 
 export {

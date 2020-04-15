@@ -45,6 +45,8 @@ function register ({ registerHook, peertubeHelpers }) {
       return result
     }
   })
+
+  peertubeHelpers.notifier.info('you are on the watch page', 'useless', 1000)
 }
 
 export {
