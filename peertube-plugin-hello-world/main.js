@@ -48,6 +48,13 @@ async function register ({
     private: false
   })
 
+  registerSetting({
+    name: 'my-markdown-area',
+    label: 'Markdown text',
+    type: 'markdown-text',
+    default: false
+  })
+
   const value = await storageManager.getData('toto')
   console.log(value)
 

@@ -43,6 +43,9 @@ function register ({ registerHook, peertubeHelpers }) {
     }
   })
 
+
+  peertubeHelpers.markdownRenderer.textMarkdownToHTML('**My Bold Text**')
+    .then(v => console.log(v))
 }
 
 export {
