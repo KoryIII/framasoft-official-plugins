@@ -1,0 +1,24 @@
+{
+  "name": "peertube-plugin-auth-ldap",
+  "version": "0.0.1",
+  "description": "Add LDAP support to login form in PeerTube.",
+  "engine": {
+    "peertube": ">=2.2.0"
+  },
+  "keywords": [
+    "peertube",
+    "plugin",
+    "auth"
+  ],
+  "homepage": "https://framagit.org/framasoft/peertube/official-plugins/tree/master/peertube-plugin-auth-ldap",
+  "author": "Chocobozzz",
+  "bugs": "https://framagit.org/framasoft/peertube/official-plugins/issues",
+  "library": "./main.js",
+  "staticDirs": {},
+  "css": [],
+  "clientScripts": [],
+  "translations": {},
+  "dependencies": {
+    "ldapauth-fork": "^5.0.0-rc.6"
+  }
+}
