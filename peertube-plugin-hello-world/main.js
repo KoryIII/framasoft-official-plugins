@@ -6,7 +6,8 @@ async function register ({
   storageManager,
   videoCategoryManager,
   videoLicenceManager,
-  videoLanguageManager
+  videoLanguageManager,
+  registerExternalAuth
 }) {
   const defaultAdmin = 'PeerTube admin'
 
@@ -79,6 +80,21 @@ async function register ({
   router.post('/form/post/mirror', (req, res) => {
     res.json(req.body)
   })
+
+  {
+    const result = registerExternalAuth({
+      authName: 'fake-auth',
+      authDisplayName: 'fake auth',
+      onAuthRequest: (req, res) => {
+        result.userAuthenticated({
+          req,
+          res,
+          username: 'fake_auth_username',
+          email: 'fake_auth_username@example.com'
+        })
+      }
+    })
+  }
 }
 
 async function unregister () {
