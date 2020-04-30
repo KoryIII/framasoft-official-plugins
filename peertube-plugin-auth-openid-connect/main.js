@@ -87,9 +87,9 @@ async function register ({
   })
 
   const router = getRouter()
-  router.use('/id-token-cb', (req, res) => handleCb(peertubeHelpers, settingsManager, req, res))
+  router.use('/code-cb', (req, res) => handleCb(peertubeHelpers, settingsManager, req, res))
 
-  store.redirectUrl = peertubeHelpers.config.getWebserverUrl() + '/plugins/auth-openid-connect/router/id-token-cb'
+  store.redirectUrl = peertubeHelpers.config.getWebserverUrl() + '/plugins/auth-openid-connect/router/code-cb'
 
   const secretKeyBuf = await getRandomBytes(16)
   store.secretKey = secretKeyBuf.toString('hex')
@@ -160,9 +160,6 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
   }
 
   store.client = new issuer.Client(clientOptions)
-
-  // We already registered this external auth
-  if (store.userAuthenticated) return
 
   const webserverUrl = config.getWebserverUrl()
 
