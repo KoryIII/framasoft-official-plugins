@@ -7,7 +7,8 @@ async function register ({
   videoCategoryManager,
   videoLicenceManager,
   videoLanguageManager,
-  registerExternalAuth
+  registerExternalAuth,
+  peertubeHelpers
 }) {
   const defaultAdmin = 'PeerTube admin'
 
@@ -73,6 +74,10 @@ async function register ({
 
   videoLicenceManager.addLicence(42, 'Best licence')
   videoLicenceManager.deleteLicence(7) // Public domain
+
+  settingsManager.onSettingsChange(settings => {
+    peertubeHelpers.logger.info('Settings changed!', { settings })
+  })
 
   const router = getRouter()
   router.get('/ping', (req, res) => res.json({ message: 'pong' }))
