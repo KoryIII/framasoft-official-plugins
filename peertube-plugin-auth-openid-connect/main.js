@@ -192,13 +192,13 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
 
   if (!store.userAuthenticated) {
     logger.info('Received callback but cannot userAuthenticated function does not exist.')
-    return res.sendStatus(400)
+    return onCBError(res)
   }
 
   const encryptedCodeVerifier = req.cookies[cookieName]
   if (!encryptedCodeVerifier) {
     logger.error('Received callback but code verifier not found in request cookie.')
-    return res.sendStatus(400)
+    return onCBError(res)
   }
 
   try {
@@ -242,8 +242,12 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
     })
   } catch (err) {
     logger.error('Error in handle callback.', { err })
-    res.sendStatus(400)
+    onCBError(res)
   }
+}
+
+function onCBError (res) {
+  res.redirect('/login?externalAuthError=true')
 }
 
 async function encrypt (data) {
