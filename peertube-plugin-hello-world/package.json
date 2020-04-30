@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-hello-world",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Hello world PeerTube plugin example",
   "engine": {
     "peertube": ">=2.2.0"
