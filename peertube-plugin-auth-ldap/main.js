@@ -1,11 +1,23 @@
 const LdapAuth = require('ldapauth-fork')
 
-async function register ({ 
-  registerIdAndPassAuth, 
-  registerSetting, 
-  settingsManager, 
+const store = {
+  weight: 100
+}
+
+async function register ({
+  registerIdAndPassAuth,
+  registerSetting,
+  settingsManager,
   peertubeHelpers
 }) {
+  registerSetting({
+    name: 'weight',
+    label: 'Auth weight',
+    type: 'input',
+    private: true,
+    default: 100
+  })
+
   registerSetting({
     name: 'url',
     label: 'URL',
@@ -68,8 +80,14 @@ async function register ({
 
   registerIdAndPassAuth({
     authName: 'ldap',
-    getWeight: () => 100,
+    getWeight: () => store.weight,
     login: options => login(peertubeHelpers, settingsManager, options)
+  })
+
+  store.weight = await settingsManager.getSetting('weight')
+
+  settingsManager.onSettingsChange(settings => {
+    if (settigns && typeof settings.weight === 'number') store.weight = weight
   })
 }
 

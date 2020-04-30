@@ -89,7 +89,7 @@ async function register ({
   {
     const result = registerExternalAuth({
       authName: 'fake-auth',
-      authDisplayName: 'fake auth',
+      authDisplayName: () => 'fake auth',
       onAuthRequest: (req, res) => {
         result.userAuthenticated({
           req,
