@@ -84,10 +84,10 @@ async function register ({
     login: options => login(peertubeHelpers, settingsManager, options)
   })
 
-  store.weight = await settingsManager.getSetting('weight')
+  setWeight(await settingsManager.getSetting('weight'))
 
   settingsManager.onSettingsChange(settings => {
-    if (settigns && typeof settings.weight === 'number') store.weight = weight
+    if (settings && settings.weight) setWeight(settings.weight)
   })
 }
 
@@ -101,6 +101,10 @@ module.exports = {
 }
 
 // ############################################################################
+
+function setWeight (weight) {
+  store.weight = parseInt(weight + '', 10)
+}
 
 async function login (peertubeHelpers, settingsManager, options) {
   const logger = peertubeHelpers.logger
