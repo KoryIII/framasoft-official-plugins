@@ -5,7 +5,8 @@ const store = {
   client: null,
   userAuthenticated: null,
   secretKey: null,
-  redirectUrl: null
+  redirectUrl: null,
+  authDisplayName: 'OpenID Connect'
 }
 
 const encryptionOptions = {
@@ -25,6 +26,14 @@ async function register ({
   getRouter
 }) {
   const { logger } = peertubeHelpers
+
+  registerSetting({
+    name: 'auth-display-name',
+    label: 'Auth display name',
+    type: 'input',
+    private: true,
+    default: 'OpenID Connect'
+  })
 
   registerSetting({
     name: 'discover-url',
@@ -86,10 +95,13 @@ async function register ({
   store.secretKey = secretKeyBuf.toString('hex')
 
   await loadSettingsAndCreateClient(registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager)
+  store.authDisplayName = await settingsManager.getSetting('auth-display-name')
 
-  settingsManager.onSettingsChange(() => {
+  settingsManager.onSettingsChange(settings => {
     loadSettingsAndCreateClient(registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager)
       .catch(err => logger.error('Cannot load settings and create client after settings changes.', { err }))
+
+    if (settings['auth-display-name']) store.authDisplayName = settings['auth-display-name']
   })
 }
 
@@ -108,7 +120,7 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
   const { logger, config } = peertubeHelpers
 
   if (store.client) {
-    unregisterExternalAuth('openid')
+    unregisterExternalAuth('openid-connect')
   }
 
   store.client = null
@@ -156,7 +168,7 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
 
   const result = registerExternalAuth({
     authName: 'openid-connect',
-    authDisplayName: () => 'OpenID Connect',
+    authDisplayName: () => store.authDisplayName,
     onAuthRequest: async (req, res) => {
       try {
         const codeVerifier = openidModule.generators.codeVerifier()
