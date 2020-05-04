@@ -30,14 +30,6 @@ async function register ({
   })
 
   registerSetting({
-    name: 'sign-get-request',
-    label: 'Sign get request',
-    type: 'input-checkbox',
-    private: true,
-    default: false
-  })
-
-  registerSetting({
     name: 'auth-display-name',
     label: 'Auth display name',
     type: 'input',
@@ -54,9 +46,31 @@ async function register ({
 
   registerSetting({
     name: 'provider-certificate',
-    label: 'Identity provider certificate',
+    label: 'Identity provider certificate (PEM format)',
     type: 'input-textarea',
     private: true
+  })
+
+  registerSetting({
+    name: 'service-certificate',
+    label: 'Service certificate (PEM format)',
+    type: 'input-textarea',
+    private: true
+  })
+
+  registerSetting({
+    name: 'service-private-key',
+    label: 'Service private key (PEM format)',
+    type: 'input-textarea',
+    private: true
+  })
+
+  registerSetting({
+    name: 'sign-get-request',
+    label: 'Sign get request',
+    type: 'input-checkbox',
+    private: true,
+    default: false
   })
 
   registerSetting({
@@ -145,7 +159,9 @@ async function loadSettingsAndCreateProviders (
     'client-id',
     'sign-get-request',
     'login-url',
-    'provider-certificate'
+    'provider-certificate',
+    'service-certificate',
+    'service-private-key'
   ])
 
   if (!settings['login-url']) {
@@ -158,12 +174,12 @@ async function loadSettingsAndCreateProviders (
     return
   }
 
-  const { publicKey: servicePublicKey, privateKey: servicePrivateKey } = await lazyLoadServiceCertificates(peertubeHelpers, storageManager)
+  logger.debug('Creating SAML service/identity instances.', { settings })
 
   const serviceOptions = {
     entity_id: settings['client-id'],
-    private_key: servicePrivateKey,
-    certificate: servicePublicKey,
+    private_key: settings['service-private-key'],
+    certificate: settings['service-certificate'],
     assert_endpoint: store.assertUrl
   }
   store.serviceProvider = new saml2.ServiceProvider(serviceOptions)
@@ -182,14 +198,19 @@ async function loadSettingsAndCreateProviders (
     authName: 'saml2',
     authDisplayName: () => store.authDisplayName,
     onAuthRequest: async (req, res) => {
-      store.serviceProvider.create_login_request_url(store.identityProvider, {}, (err, loginUrl, requestId) => {
-        if (err) {
-          logger.error('Cannot SAML 2 authenticate.', { err })
-          return redirectOnError(res)
-        }
+      try {
+        store.serviceProvider.create_login_request_url(store.identityProvider, {}, (err, loginUrl, requestId) => {
+          if (err) {
+            logger.error('Cannot SAML 2 authenticate.', { err })
+            return redirectOnError(res)
+          }
 
-        res.redirect(loginUrl)
-      })
+          res.redirect(loginUrl)
+        })
+      } catch (err) {
+        logger.error('Cannot create login request url.', { err })
+        return redirectOnError(res)
+      }
     }
   })
 
@@ -255,40 +276,4 @@ async function buildUser (settingsManager, samlUser) {
     displayName: findInUser(samlUser, settings['display-name-property']),
     role: findInUser(samlUser, settings['role-property'])
   }
-}
-
-async function lazyLoadServiceCertificates (peertubeHelpers, storageManager) {
-  const { logger } = peertubeHelpers
-
-  let privateKey = await storageManager.getData('service-private-key')
-  let publicKey = await storageManager.getData('service-public-key')
-
-  if (!privateKey || !publicKey) {
-    logger.info('Generating public/private keys for SAML 2.')
-
-    return new Promise((res, rej) => {
-      const options = {
-        modulusLength: 2048,
-        publicKeyEncoding: {
-          type: 'spki',
-          format: 'pem'
-        },
-        privateKeyEncoding: {
-          type: 'pkcs8',
-          format: 'pem'
-        }
-      }
-
-      crypto.generateKeyPair('rsa', options, (err, publicKey, privateKey) => {
-        if (err) return rej(err)
-
-        Promise.all([
-          storageManager.storeData('service-private-key', privateKey),
-          storageManager.storeData('service-public-key', publicKey)
-        ]).then(() => res({ publicKey, privateKey }))
-      })
-    })
-  }
-
-  return { privateKey, publicKey }
 }
