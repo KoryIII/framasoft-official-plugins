@@ -57,6 +57,14 @@ async function register ({
   })
 
   registerSetting({
+    name: 'scope',
+    label: 'Scope',
+    type: 'input',
+    private: true,
+    default: 'openid email profile'
+  })
+
+  registerSetting({
     name: 'username-property',
     label: 'Username property',
     type: 'input',
@@ -94,15 +102,15 @@ async function register ({
   const secretKeyBuf = await getRandomBytes(16)
   store.secretKey = secretKeyBuf.toString('hex')
 
-  await loadSettingsAndCreateClient(registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager)
-  store.authDisplayName = await settingsManager.getSetting('auth-display-name')
-
   settingsManager.onSettingsChange(settings => {
     loadSettingsAndCreateClient(registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager)
       .catch(err => logger.error('Cannot load settings and create client after settings changes.', { err }))
 
     if (settings['auth-display-name']) store.authDisplayName = settings['auth-display-name']
   })
+
+  await loadSettingsAndCreateClient(registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager)
+  store.authDisplayName = await settingsManager.getSetting('auth-display-name')
 }
 
 async function unregister () {
@@ -127,6 +135,7 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
   store.userAuthenticated = null
 
   const settings = await settingsManager.getSettings([
+    'scope',
     'discover-url',
     'client-id',
     'client-secret'
@@ -172,7 +181,7 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
         const codeChallenge = openidModule.generators.codeChallenge(codeVerifier)
 
         const redirectUrl = store.client.authorizationUrl({
-          scope: 'openid email profile',
+          scope: settings['scope'],
           response_mode: 'form_post',
           code_challenge: codeChallenge,
           code_challenge_method: 'S256'
