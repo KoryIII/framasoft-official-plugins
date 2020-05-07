@@ -25,7 +25,7 @@ async function register ({
   registerSetting({
     name: 'check-seconds-interval',
     label: 'Blocklist check frequency (seconds)',
-    type: 'input-textarea',
+    type: 'input',
     private: true,
     default: 3600 // 1 Hour
   })
@@ -105,7 +105,7 @@ function runLater () {
 
 function get (url) {
   return new Promise((resolve, reject) => {
-    simpleGet({ url, json: true }, function (err, res, data) {
+    simpleGet.concat({ url, method: 'GET', json: true }, function (err, res, data) {
       if (err) return reject(err)
 
       return resolve({ res, data })
@@ -114,12 +114,14 @@ function get (url) {
 }
 
 function addEntity (peertubeHelpers, value) {
-  const moderation = { peertubeHelpers }
+  const { moderation, logger } = peertubeHelpers
 
   if (store.alreadyAdded.has(value)) return
 
   store.alreadyRemoved.delete(value)
   store.alreadyAdded.add(value)
+
+  logger.info('Auto mute %s from blocklist.', value)
 
   // Account
   if (value.includes('@')) {
@@ -131,12 +133,14 @@ function addEntity (peertubeHelpers, value) {
 }
 
 function removeEntity (peertubeHelpers, value) {
-  const moderation = { peertubeHelpers }
+  const { moderation, logger } = peertubeHelpers
 
   if (store.alreadyRemoved.has(value)) return
 
   store.alreadyAdded.delete(value)
   store.alreadyRemoved.add(value)
+
+  logger.info('Auto removing mute %s from blocklist.', value)
 
   // Account
   if (value.includes('@')) {
