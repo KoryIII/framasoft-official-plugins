@@ -11,6 +11,7 @@ const store = {
 
 async function register ({
   settingsManager,
+  storageManager,
   peertubeHelpers,
   registerSetting
 }) {
@@ -36,10 +37,10 @@ async function register ({
 
   const settings = await settingsManager.getSettings([ 'check-seconds-interval', 'blocklist-urls' ])
 
-  await load(peertubeHelpers, settings['blocklist-urls'], settings['check-seconds-interval'])
+  await load(peertubeHelpers, storageManager, settings['blocklist-urls'], settings['check-seconds-interval'])
 
   settingsManager.onSettingsChange(settings => {
-    load(peertubeHelpers, settings['blocklist-urls'], settings['check-seconds-interval'])
+    load(peertubeHelpers, storageManager, settings['blocklist-urls'], settings['check-seconds-interval'])
       .catch(err => logger.error('Cannot load auto mute plugin.', { err }))
   })
 }
@@ -55,7 +56,7 @@ module.exports = {
 
 // ############################################################################
 
-async function load (peertubeHelpers, blocklistUrls, checkIntervalSeconds) {
+async function load (peertubeHelpers, storageManager, blocklistUrls, checkIntervalSeconds) {
   const { logger } = peertubeHelpers
 
   if (store.timeout) clearTimeout(store.timeout)
@@ -72,17 +73,27 @@ async function load (peertubeHelpers, blocklistUrls, checkIntervalSeconds) {
 
   logger.info('Loaded %d blocklist URLs for auto mute plugin.', store.urls.length, { urls: store.urls })
 
-  runLater(peertubeHelpers)
+  runLater(peertubeHelpers, storageManager)
 }
 
-async function runCheck (peertubeHelpers) {
+async function runCheck (peertubeHelpers, storageManager) {
   const { logger } = peertubeHelpers
 
-  if (store.urls.length === 0) return runLater(peertubeHelpers)
+  if (store.urls.length === 0) return runLater(peertubeHelpers, storageManager)
+
+  let lastChecks = await storageManager.getData('last-checks')
+  if (!lastChecks) lastChecks = {}
+
+  const newLastCheck = {}
 
   for (const url of store.urls) {
     try {
       const { data } = await get(url)
+      newLastCheck[url] = new Date().toISOString()
+
+      const lastCheckTime = lastChecks[url]
+        ? new Date(lastChecks[url]).getTime()
+        : 0
 
       if (Array.isArray(data.data) === false) {
         throw new Error('JSON response is not valid.')
@@ -90,6 +101,13 @@ async function runCheck (peertubeHelpers) {
 
       for (const entity of data.data) {
         if (!entity.value) throw new Error('JSON entity is not valid.')
+
+        // We already checked this entity?
+        if (entity.updatedAt) {
+          const updatedAtTime = new Date(entity.updatedAt).getTime()
+
+          if (updatedAtTime < lastCheckTime) continue
+        }
 
         if (entity.action === 'remove') await removeEntity(peertubeHelpers, entity.value)
         else await addEntity(peertubeHelpers, entity.value)
@@ -99,15 +117,19 @@ async function runCheck (peertubeHelpers) {
     }
   }
 
-  runLater(peertubeHelpers)
+  await storageManager.storeData('last-checks', newLastCheck)
+
+  runLater(peertubeHelpers, storageManager)
 }
 
-function runLater (peertubeHelpers) {
+function runLater (peertubeHelpers, storageManager) {
   const { logger } = peertubeHelpers
 
   logger.debug('Will run auto mute check in %d seconds.', store.checkIntervalSeconds)
 
-  store.timeout = setTimeout(() => runCheck(peertubeHelpers), store.checkIntervalSeconds * 1000)
+  store.timeout = setTimeout(() => {
+    runCheck(peertubeHelpers, storageManager)
+  }, store.checkIntervalSeconds * 1000)
 }
 
 function get (url) {
