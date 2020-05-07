@@ -5,7 +5,8 @@ const store = {
   checkIntervalSeconds: null,
   alreadyAdded: new Set(),
   alreadyRemoved: new Set(),
-  serverAccountId: null
+  serverAccountId: null,
+  timeout: null
 }
 
 async function register ({
@@ -41,8 +42,6 @@ async function register ({
     load(peertubeHelpers, settings['blocklist-urls'], settings['check-seconds-interval'])
       .catch(err => logger.error('Cannot load auto mute plugin.', { err }))
   })
-
-  runCheckForever(peertubeHelpers)
 }
 
 async function unregister () {
@@ -59,6 +58,8 @@ module.exports = {
 async function load (peertubeHelpers, blocklistUrls, checkIntervalSeconds) {
   const { logger } = peertubeHelpers
 
+  if (store.timeout) clearTimeout(store.timeout)
+
   store.checkIntervalSeconds = checkIntervalSeconds
 
   store.urls = (blocklistUrls || '').split('\n')
@@ -70,12 +71,14 @@ async function load (peertubeHelpers, blocklistUrls, checkIntervalSeconds) {
   }
 
   logger.info('Loaded %d blocklist URLs for auto mute plugin.', store.urls.length, { urls: store.urls })
+
+  runLater(peertubeHelpers)
 }
 
-async function runCheckForever (peertubeHelpers) {
+async function runCheck (peertubeHelpers) {
   const { logger } = peertubeHelpers
 
-  if (store.urls.length === 0) return runLater()
+  if (store.urls.length === 0) return runLater(peertubeHelpers)
 
   for (const url of store.urls) {
     try {
@@ -96,11 +99,15 @@ async function runCheckForever (peertubeHelpers) {
     }
   }
 
-  runLater()
+  runLater(peertubeHelpers)
 }
 
-function runLater () {
-  setTimeout(runCheckForever, store.checkIntervalSeconds * 1000)
+function runLater (peertubeHelpers) {
+  const { logger } = peertubeHelpers
+
+  logger.debug('Will run auto mute check in %d seconds.', store.checkIntervalSeconds)
+
+  store.timeout = setTimeout(() => runCheck(peertubeHelpers), store.checkIntervalSeconds * 1000)
 }
 
 function get (url) {
@@ -144,9 +151,9 @@ function removeEntity (peertubeHelpers, value) {
 
   // Account
   if (value.includes('@')) {
-    return moderation.blockAccount({ byAccountId: store.serverAccountId, handleToUnblock: value })
+    return moderation.unblockAccount({ byAccountId: store.serverAccountId, handleToUnblock: value })
   }
 
   // Server
-  return moderation.blockAccount({ byAccountId: store.serverAccountId, hostToUnblock: value })
+  return moderation.unblockServer({ byAccountId: store.serverAccountId, hostToUnblock: value })
 }
