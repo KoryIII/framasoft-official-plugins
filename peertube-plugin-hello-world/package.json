@@ -32,6 +32,10 @@
     {
       "script": "client/search-client-plugin.js",
       "scopes": [ "search" ]
+    },
+    {
+      "script": "client/login-client-plugin.js",
+      "scopes": [ "login" ]
     }
   ],
   "translations": {
