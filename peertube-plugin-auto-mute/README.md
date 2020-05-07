@@ -58,6 +58,6 @@ For example, to revert `peertube.cpy.re` from the blocklist, update the JSON:
 ```
 
 The purpose of the `updatedAt` field is to not override admin mutes/unmutes:
- * Plugin auto mutes of account A with an `updatedAt: '2020-05-07T14:42:48.954Z'`
- * Admin thinks this account is fine so it unumutes account A
- * On another check, the plugin won't re-mute the account A because of the `updatedAt` is before the last check
+ * Plugin auto mutes account A with an `updatedAt: '2020-05-07T14:42:48.954Z'`
+ * Admin thinks this account is fine so it unmutes account A
+ * On another check, the plugin won't re-mute the account A because the `updatedAt` is before the last check
