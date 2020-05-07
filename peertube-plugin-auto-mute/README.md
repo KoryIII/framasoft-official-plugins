@@ -8,7 +8,7 @@ Auto mute accounts or instances based on public blocklists.
 
 ## Blocklist URL format
 
-This plugins expect the following JSON format from public blocklists:
+This plugin expects the following JSON format from public blocklists:
 
 ```
 {
