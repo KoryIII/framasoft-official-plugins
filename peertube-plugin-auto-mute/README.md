@@ -2,7 +2,11 @@
 
 Auto mute accounts or instances based on public blocklists.
 
-## Format
+## Settings
+
+![settings screen](https://lutim.cpy.re/qaFui9N1.png)
+
+## Blocklist URL format
 
 This plugins expect the following JSON format from public blocklists:
 
