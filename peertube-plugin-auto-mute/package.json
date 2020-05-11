@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-auto-mute",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Auto mute plugin for PeerTube",
   "engine": {
     "peertube": ">=2.2.0"

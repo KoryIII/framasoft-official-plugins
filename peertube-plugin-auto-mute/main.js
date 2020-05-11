@@ -13,9 +13,10 @@ async function register ({
   settingsManager,
   storageManager,
   peertubeHelpers,
-  registerSetting
+  registerSetting,
+  getRouter
 }) {
-  const { logger } = peertubeHelpers
+  const { logger, database, server } = peertubeHelpers
 
   registerSetting({
     name: 'blocklist-urls',
@@ -32,6 +33,14 @@ async function register ({
     default: 3600 // 1 Hour
   })
 
+  registerSetting({
+    name: 'expose-mute-list',
+    label: 'Publicly expose my mute list',
+    type: 'input-checkbox',
+    private: true,
+    default: false
+  })
+
   const serverActor = await peertubeHelpers.server.getServerActor()
   store.serverAccountId = serverActor.Account.id
 
@@ -42,6 +51,44 @@ async function register ({
   settingsManager.onSettingsChange(settings => {
     load(peertubeHelpers, storageManager, settings['blocklist-urls'], settings['check-seconds-interval'])
       .catch(err => logger.error('Cannot load auto mute plugin.', { err }))
+  })
+
+  const router = getRouter()
+  router.get('/api/v1/mute-list', async (req, res) => {
+    try {
+      const setting = await settingsManager.getSetting('expose-mute-list')
+      if (setting !== true) return res.sendStatus(403)
+
+      const serverActor = await server.getServerActor()
+      const serverAccountId = serverActor.Account.id
+
+      const [ serverMutes, accountMutes ] = await Promise.all([
+        database.query(
+          'SELECT "server"."host", "serverBlocklist"."updatedAt" FROM "serverBlocklist" ' +
+          'INNER JOIN server ON server.id = "serverBlocklist"."targetServerId" WHERE "serverBlocklist"."accountId" = ' + serverAccountId,
+          { type: 'SELECT' }
+        ),
+
+        database.query(
+          'SELECT "actor"."preferredUsername", "server"."host", "accountBlocklist"."updatedAt" FROM "accountBlocklist" ' +
+          'INNER JOIN account ON account.id = "accountBlocklist"."targetAccountId" ' +
+          'INNER JOIN actor ON actor.id = account."actorId" ' +
+          'INNER JOIN server ON server.id = actor."serverId" WHERE "accountBlocklist"."accountId" = ' + serverAccountId,
+          { type: 'SELECT' }
+        )
+      ])
+
+      let result = serverMutes.map(m => ({ value: m.host, updatedAt: m.updatedAt }))
+
+      result = result.concat(accountMutes.map(m => ({ value: `${m.preferredUsername}@${m.host}`, updatedAt: m.updatedAt })))
+
+      return res.json({
+        data: result
+      })
+    } catch (err) {
+      logger.error('Error in mute list endpoint.', { err })
+      res.sendStatus(500)
+    }
   })
 }
 

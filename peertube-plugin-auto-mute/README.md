@@ -2,9 +2,18 @@
 
 Auto mute accounts or instances based on public blocklists.
 
+## Mute lists
+
+**Add your public list here**
+
 ## Settings
 
-![settings screen](https://lutim.cpy.re/qaFui9N1.png)
+You can choose to expose your mute list that will be available on `https://example.com/plugins/plugins/auto-mute/router/api/v1/mute-list`.
+Other instances can follow your mute list, but muting removal is not supported yet. For example, if you subscribe to the mute list of `example.com`:
+ * `example.com` mutes `account1`
+ * Your instance automatically mutes `account1`
+ * `example.com` unmutes `account1`
+ * You instance **will not** unmute `account1`
 
 ## Blocklist URL format
 
