@@ -35,6 +35,16 @@ async function register ({
     }
   })
 
+  registerHook({
+    target: 'filter:api.video.post-import-url.accept.result',
+    handler: ({ accepted }, { video }) => {
+      if (!accepted) return { accepted: false }
+      if (video.name.includes('small video - youtube')) return { accepted: false, errorMessage: 'bad word' }
+
+      return { accepted: true }
+    }
+  })
+
   registerSetting({
     name: 'admin-name',
     label: 'Admin name',
