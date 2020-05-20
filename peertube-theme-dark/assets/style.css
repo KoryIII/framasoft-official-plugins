@@ -7,4 +7,8 @@ body {
   --inputForegroundColor: #fff;
   --inputBackgroundColor: gray;
   --inputPlaceholderColor: #fff;
+
+  --textareaForegroundColor: #fff;
+  --textareaBackgroundColor: gray;
+  --markdownTextareaBackgroundColor: gray;
 }
