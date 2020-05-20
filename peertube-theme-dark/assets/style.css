@@ -1,7 +1,10 @@
 body {
   --mainBackgroundColor: #111111;
   --mainForegroundColor: #fff;
+
   --submenuColor: rgb(32, 32, 32);
+
+  --inputForegroundColor: #fff;
   --inputBackgroundColor: gray;
   --inputPlaceholderColor: #fff;
 }
