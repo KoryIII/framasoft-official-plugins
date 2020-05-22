@@ -11,4 +11,8 @@ body {
   --textareaForegroundColor: #fff;
   --textareaBackgroundColor: gray;
   --markdownTextareaBackgroundColor: gray;
+
+  --greyForegroundColor: gray;
+  --actionButtonColor: gray;
+  --activatedActionButtonColor: #fff;
 }

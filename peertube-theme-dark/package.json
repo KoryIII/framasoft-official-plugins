@@ -1,6 +1,6 @@
 {
   "name": "peertube-theme-dark",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "PeerTube dark theme",
   "engine": {
     "peertube": ">=2.2.0"
