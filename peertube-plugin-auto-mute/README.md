@@ -6,6 +6,8 @@ Auto mute accounts or instances based on public blocklists.
 
 **Add your public list here**
 
+ * https://peertube_isolation.frama.io/list/peertube_isolation.json by [@PeerTube_Isolation](https://cornichon.me/@PeerTube_Isolation)
+
 ## Settings
 
 You can choose to expose your mute list that will be available on `https://example.com/plugins/plugins/auto-mute/router/api/v1/mute-list`.
