@@ -239,7 +239,11 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
 
     let role
     if (settings['role-property']) {
-      role = parseInt('' + userInfo[settings['role-property']], 10)
+      if (Array.isArray(settings['role-property'])){
+        role = parseInt('' + userInfo[settings['role-property']][0], 10);
+      } else {
+        role = parseInt('' + userInfo[settings['role-property']], 10)
+      }
     }
 
     let displayName
