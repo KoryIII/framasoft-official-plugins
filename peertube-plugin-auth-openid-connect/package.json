@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-auth-openid-connect",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Add OpenID connect support to login form in PeerTube.",
   "engine": {
     "peertube": ">=2.2.0"
