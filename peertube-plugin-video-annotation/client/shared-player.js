@@ -56,12 +56,15 @@ function buildAnnotation (text) {
 
   const align = options && options.align ? options.align : 'top-right'
 
-  return {
-    start: timestamps.start,
-    end: timestamps.end,
+  const result = {
     align,
     content
   }
+
+  result.start = timestamps.start || 0
+  result.end = timestamps.end || video.duration
+
+  return result
 }
 
 function buildTimestamps (text) {
