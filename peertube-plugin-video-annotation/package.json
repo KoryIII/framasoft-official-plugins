@@ -1,0 +1,54 @@
+{
+  "name": "peertube-plugin-video-annotation",
+  "description": "PeerTube plugin video annotation",
+  "version": "0.0.1",
+  "author": "Chocobozzz",
+  "bugs": "https://framagit.org/framasoft/peertube/peertube-plugin-video-annotation/issues",
+  "clientScripts": [
+    {
+      "script": "dist/embed-client-plugin.js",
+      "scopes": [
+        "embed"
+      ]
+    },
+    {
+      "script": "dist/video-edit-client-plugin.js",
+      "scopes": [
+        "video-edit"
+      ]
+    },
+    {
+      "script": "dist/video-watch-client-plugin.js",
+      "scopes": [
+        "video-watch"
+      ]
+    }
+  ],
+  "css": [
+    "assets/style.css",
+    "assets/videojs-overlay.css"
+  ],
+  "devDependencies": {
+    "@purtuga/esm-webpack-plugin": "^1.1.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "videojs-overlay": "^2.1.4"
+  },
+  "engine": {
+    "peertube": ">=2.4.0"
+  },
+  "homepage": "https://framagit.org/framasoft/peertube/peertube-plugin-quickstart",
+  "keywords": [
+    "peertube",
+    "plugin"
+  ],
+  "library": "./main.js",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "cp node_modules/videojs-overlay/dist/videojs-overlay.css ./assets/videojs-overlay.css && webpack --mode=production"
+  },
+  "staticDirs": {},
+  "translations": {
+    "fr-FR": "./languages/fr.json"
+  }
+}
