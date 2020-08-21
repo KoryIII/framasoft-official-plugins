@@ -1,6 +1,6 @@
 async function register ({ registerVideoField, peertubeHelpers }) {
   const fieldName = 'player-annotations'
-  const descriptionSource = 'See <a href="https://cpy.re" target="_blank">this document</a> for annotation format'
+  const descriptionSource = 'See <a href="https://framagit.org/framasoft/peertube/official-plugins/-/blob/master/peertube-plugin-video-annotation/README.md" target="_blank">this document</a> for annotation format'
 
   const descriptionHTML = await peertubeHelpers.translate(descriptionSource)
   const commonOptions = {
