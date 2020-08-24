@@ -19,7 +19,7 @@ export function buildPlayer (video, player, videojs) {
 }
 
 function parseAnnotations (annotationsText) {
-  const splitted = annotationsText.split('\n\n')
+  const splitted = annotationsText.split(/\n\r?\n\r?/)
 
   return splitted.map(s => buildAnnotation(s))
                  .filter(a => !!a)
