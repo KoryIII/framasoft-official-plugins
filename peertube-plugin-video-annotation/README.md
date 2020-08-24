@@ -4,6 +4,8 @@ Add a field in the video form so users can set annotation to their video.
 
 ![](https://lutim.cpy.re/n7mWsZrz.png)
 
+By default, the annotation will be on the top-right of the player.
+
 Annotations format:
 
 ```
