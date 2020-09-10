@@ -1,3 +1,13 @@
 .vjs-overlay a {
   color: #210cbf;
 }
+
+/* make font size for overlays little bigger and responsive */
+.video-js .vjs-overlay { /* apply for screen sizes under 768px */
+  font-size:1.2rem;
+}
+@media screen and (min-width: 768px) { /* apply for screen sizes bigger or equal 768px */
+  .video-js .vjs-overlay {
+    font-size:1.4rem;
+  }
+}
