@@ -1,7 +1,7 @@
 {
   "name": "peertube-plugin-video-annotation",
   "description": "PeerTube plugin video annotation",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Chocobozzz",
   "bugs": "https://framagit.org/framasoft/peertube/peertube-plugin-video-annotation/issues",
   "clientScripts": [
@@ -37,7 +37,7 @@
   "engine": {
     "peertube": ">=2.4.0"
   },
-  "homepage": "https://framagit.org/framasoft/peertube/peertube-plugin-quickstart",
+  "homepage": "https://framagit.org/framasoft/peertube/official-plugins/-/tree/master/peertube-plugin-video-annotation",
   "keywords": [
     "peertube",
     "plugin"
