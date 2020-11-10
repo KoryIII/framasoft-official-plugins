@@ -173,6 +173,9 @@ async function login (peertubeHelpers, settingsManager, options) {
       let username = user[usernameProperty] || ''
       username = username.replace(/[^a-z0-9._]/g, '_')
 
+      let email = user[mailProperty]
+      if (Array.isArray(email)) email = email[0]
+
       return res({
         username,
         email: user[mailProperty]
