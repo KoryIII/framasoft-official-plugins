@@ -178,7 +178,7 @@ async function login (peertubeHelpers, settingsManager, options) {
 
       return res({
         username,
-        email: user[mailProperty]
+        email
       })
     })
   })
