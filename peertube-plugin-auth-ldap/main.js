@@ -78,6 +78,43 @@ async function register ({
     default: 'uid'
   })
 
+  registerSetting({
+    name: 'group-base',
+    label: 'Group base',
+    type: 'input',
+    private: true,
+    descriptionHTML: '<p>Fill the following settings to map PeerTube roles to LDAP Groups. LDAP users without any valid LDAP group will be refused login. Leave empty to let LDAP users join with default User role.</p>'
+  })
+
+  registerSetting({
+    name: 'group-filter',
+    label: 'Group filter',
+    type: 'input',
+    private: true,
+    default: '(member={{dn}})'
+  })
+
+  registerSetting({
+    name: 'group-admin',
+    label: 'Administrator group',
+    type: 'input',
+    private: true
+  })
+
+  registerSetting({
+    name: 'group-mod',
+    label: 'Moderator group',
+    type: 'input',
+    private: true
+  })
+
+  registerSetting({
+    name: 'group-user',
+    label: 'User group',
+    type: 'input',
+    private: true
+  })
+
   registerIdAndPassAuth({
     authName: 'ldap',
     getWeight: () => store.weight,
@@ -118,6 +155,11 @@ async function login (peertubeHelpers, settingsManager, options) {
     'search-filter',
     'mail-property',
     'username-property',
+    'group-base',
+    'group-filter',
+    'group-admin',
+    'group-mod',
+    'group-user',
   ])
 
   if (!settings['url']) {
@@ -131,6 +173,8 @@ async function login (peertubeHelpers, settingsManager, options) {
     bindCredentials: settings['bind-credentials'],
     searchBase: settings['search-base'],
     searchFilter: settings['search-filter'],
+    groupSearchBase: settings['group-base'],
+    groupSearchFilter: settings['group-filter'],
     reconnect: true,
     tlsOptions: {
       rejectUnauthorized: settings['insecure-tls'] !== true
@@ -176,10 +220,45 @@ async function login (peertubeHelpers, settingsManager, options) {
       let email = user[mailProperty]
       if (Array.isArray(email)) email = email[0]
 
+      if (!settings['group-base'] || !settings['group-filter']) {
+        // Return user without fetching role from LDAP groups
+        return res({
+          username,
+          email
+        })
+      }
+
+      if (!settings['group-admin'] || !settings['group-mod'] || !settings['group-user']) {
+        logger.info('Do not login user %s because admin did not configure LDAP Groups.', options.id)
+        return res(null)
+      }
+
+      const groupAdmin = settings['group-admin']
+      const groupMod = settings['group-mod']
+      const groupUser = settings['group-user']
+
+      const roles = user._groups.map(element => element['dn'])
+
+      let role = null
+      if (roles.includes(groupAdmin)) {
+        role = 0
+      } else if (roles.includes(groupMod)) {
+        role = 1
+      } else if (roles.includes(groupUser)) {
+        role = 2
+      }
+
+      if (role === null) {
+        logger.warn('User %s does not have any allowed LDAP groups.', options.id)
+        return res(null)
+      }
+
       return res({
         username,
-        email
+        email,
+        role
       })
+
     })
   })
 }
