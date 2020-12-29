@@ -189,21 +189,18 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
           state,
         })
 
-        const encryptedCodeVerifier = await encrypt(codeVerifier)
-        res.cookie(cookieNamePrefix + 'code-verifier', encryptedCodeVerifier, {
+        const cookieOptions = {
           secure: webserverUrl.startsWith('https://'),
           httpOnly: true,
           sameSite: 'none',
           maxAge: 1000 * 60 * 10 // 10 minutes
-        })
+        }
+
+        const encryptedCodeVerifier = await encrypt(codeVerifier)
+        res.cookie(cookieNamePrefix + 'code-verifier', encryptedCodeVerifier, cookieOptions)
 
         const encryptedState = await encrypt(state)
-        res.cookie(cookieNamePrefix + 'state', encryptedState, {
-          secure: webserverUrl.startsWith('https://'),
-          httpOnly: true,
-          sameSite: 'none',
-          maxAge: 1000 * 60 * 10 // 10 minutes
-        })
+        res.cookie(cookieNamePrefix + 'state', encryptedState, cookieOptions)
 
         return res.redirect(redirectUrl)
       } catch (err) {
