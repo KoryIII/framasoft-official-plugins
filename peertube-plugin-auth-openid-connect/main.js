@@ -15,7 +15,7 @@ const encryptionOptions = {
   outputEncoding: 'hex'
 }
 
-const cookieName = 'plugin-auth-openid-code-verifier'
+const cookieNamePrefix = 'plugin-auth-openid-code-verifier-'
 
 async function register ({
   registerExternalAuth,
@@ -179,16 +179,26 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
       try {
         const codeVerifier = openidModule.generators.codeVerifier()
         const codeChallenge = openidModule.generators.codeChallenge(codeVerifier)
+        const state = openidModule.generators.state()
 
         const redirectUrl = store.client.authorizationUrl({
           scope: settings['scope'],
           response_mode: 'form_post',
           code_challenge: codeChallenge,
-          code_challenge_method: 'S256'
+          code_challenge_method: 'S256',
+          state,
         })
 
         const encryptedCodeVerifier = await encrypt(codeVerifier)
-        res.cookie(cookieName, encryptedCodeVerifier, {
+        res.cookie(cookieNamePrefix + 'code-verifier', encryptedCodeVerifier, {
+          secure: webserverUrl.startsWith('https://'),
+          httpOnly: true,
+          sameSite: 'none',
+          maxAge: 1000 * 60 * 10 // 10 minutes
+        })
+
+        const encryptedState = await encrypt(state)
+        res.cookie(cookieNamePrefix + 'state', encryptedState, {
           secure: webserverUrl.startsWith('https://'),
           httpOnly: true,
           sameSite: 'none',
@@ -213,17 +223,27 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
     return onCBError(res)
   }
 
-  const encryptedCodeVerifier = req.cookies[cookieName]
+  const encryptedCodeVerifier = req.cookies[cookieNamePrefix + 'code-verifier']
   if (!encryptedCodeVerifier) {
-    logger.error('Received callback but code verifier not found in request cookie.')
+    logger.error('Received callback but code verifier not found in request cookies.')
+    return onCBError(res)
+  }
+
+  const encryptedState = req.cookies[cookieNamePrefix + 'state']
+  if (!encryptedState) {
+    logger.error('Received callback but state not found in request cookies.')
     return onCBError(res)
   }
 
   try {
     const codeVerifier = await decrypt(encryptedCodeVerifier)
+    const state = await decrypt(encryptedState)
 
     const params = store.client.callbackParams(req)
-    const tokenSet = await store.client.callback(store.redirectUrl, params, { code_verifier: codeVerifier })
+    const tokenSet = await store.client.callback(store.redirectUrl, params, {
+      code_verifier: codeVerifier,
+      state,
+    })
 
     const accessToken = tokenSet.access_token
     const userInfo = await store.client.userinfo(accessToken)

@@ -2,6 +2,7 @@
   "name": "peertube-plugin-auth-openid-connect",
   "version": "0.0.2",
   "description": "Add OpenID connect support to login form in PeerTube.",
+  "licence": "AGPL-3.0-only",
   "engine": {
     "peertube": ">=2.2.0"
   },
@@ -19,6 +20,6 @@
   "clientScripts": [],
   "translations": {},
   "dependencies": {
-    "openid-client": "^3.15.0"
+    "openid-client": "^4.2.1"
   }
 }
