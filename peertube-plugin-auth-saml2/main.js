@@ -45,6 +45,13 @@ async function register ({
   })
 
   registerSetting({
+    name: 'logout-url',
+    label: 'SSO logout URL (needs PeerTube >= 3.0.0)',
+    type: 'input',
+    private: true
+  })
+
+  registerSetting({
     name: 'provider-certificate',
     label: 'Identity provider certificate (PEM format)',
     type: 'input-textarea',
@@ -159,6 +166,7 @@ async function loadSettingsAndCreateProviders (
     'client-id',
     'sign-get-request',
     'login-url',
+    'logout-url',
     'provider-certificate',
     'service-certificate',
     'service-private-key'
@@ -186,6 +194,7 @@ async function loadSettingsAndCreateProviders (
 
   const identityOptions = {
     sso_login_url: settings['login-url'],
+    sso_logout_url: settings['logout-url'],
     certificates: [
       settings['provider-certificate']
     ],
@@ -211,10 +220,41 @@ async function loadSettingsAndCreateProviders (
         logger.error('Cannot create login request url.', { err })
         return redirectOnError(res)
       }
+    },
+    onLogout: (user, req) => {
+      // Return silently if logout-url is not specified
+      if (!settings['logout-url']) {
+        return
+      }
+
+      return new Promise(async (resolve, reject) => {
+        try {
+          const options = await storageManager.getData(`saml_session_${req.cookies.saml_session}`)
+
+          // Include nameid format so the SLO can be accepted.
+          // See xmlbuilder for the JS object format.
+          options.name_id = {
+            "@Format": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+            "#text": options.name_id
+          }
+
+          store.serviceProvider.create_logout_request_url(store.identityProvider, options, (err, logoutUrl, requestId) => {
+            if (err) {
+              reject('Cannot SAML 2 logout.', { err })
+            }
+            resolve(logoutUrl)
+          })
+        } catch (err) {
+          reject('Cannot create logout request url.', { err })
+        }
+
+        return
+      })
     }
   })
 
   store.userAuthenticated = result.userAuthenticated
+  store.storageManager = storageManager
 }
 
 function handleAssert(peertubeHelpers, settingsManager, req, res) {
@@ -232,6 +272,15 @@ function handleAssert(peertubeHelpers, settingsManager, req, res) {
 
     try {
       const user = await buildUser(settingsManager, samlResponse.user)
+
+      // Store the nameid and session_index in the plugin database.
+      // Create a cookie called 'saml_session' so we can match later.
+      const session_id = crypto.randomBytes(10).toString("hex")
+      res.cookie('saml_session', session_id, { httpOnly: true, secure: true })
+      store.storageManager.storeData(`saml_session_${session_id}`, {
+        name_id: samlResponse.user.name_id,
+        session_index: samlResponse.user.session_index
+      })
 
       return store.userAuthenticated({
         req,

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Add SAML 2 support to login form in PeerTube.",
   "engine": {
-    "peertube": ">=2.2.0"
+    "peertube": ">=3.0.0"
   },
   "keywords": [
     "peertube",
