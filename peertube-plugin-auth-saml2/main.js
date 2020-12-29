@@ -238,10 +238,12 @@ async function loadSettingsAndCreateProviders (
             "#text": options.name_id
           }
 
-          store.serviceProvider.create_logout_request_url(store.identityProvider, options, (err, logoutUrl, requestId) => {
+          store.serviceProvider.create_logout_request_url(store.identityProvider, options, (err, logoutUrl) => {
             if (err) {
               reject('Cannot SAML 2 logout.', { err })
+              return
             }
+
             resolve(logoutUrl)
           })
         } catch (err) {
