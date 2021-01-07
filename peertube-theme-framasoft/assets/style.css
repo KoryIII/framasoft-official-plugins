@@ -1,0 +1,25 @@
+body {
+  --mainColor: #c42719;
+  --mainColorLighter: #d93e25;
+  --mainColorLightest: #fedcd7;
+  --mainHoverColor: #9c221c;
+  --mainBackgroundColor: #fff;
+  --mainForegroundColor: #1a202c;
+  --secondaryColor: #725794;
+  --greyForegroundColor: #677890;
+  --greyBackgroundColor:#e2e8f0;
+  --menuBackgroundColor: #1a202c;
+  --menuForegroundColor: #fff;
+  --submenuColor:#f7f7f7;
+  --inputForegroundColor: #1a202c;
+  --inputBackgroundColor: #fff;
+  --inputPlaceholderColor: #a0aec0;
+  --textareaForegroundColor: #1a202c;
+  --textareaBackgroundColor: #fff;
+  --markdownTextareaBackgroundColor: #efefef;
+  --actionButtonColor: #677890;
+  --supportButtonBackgroundColor: transparent;
+  --supportButtonColor: var(--actionButtonColor);
+  --supportButtonHeartColor: #c47123;
+  --activatedActionButtonColor:#1a202c;
+  }

@@ -1,0 +1,21 @@
+{
+  "name": "peertube-theme-framasoft",
+  "version": "0.0.1",
+  "description": "PeerTube Framasoft theme",
+  "engine": {
+    "peertube": ">=2.4.0"
+  },
+  "keywords": [
+    "peertube",
+    "theme"
+  ],
+  "homepage": "https://framagit.org/framasoft/peertube/official-plugins/tree/master/peertube-theme-framasoft",
+  "author": "Chocobozzz",
+  "bugs": "https://framagit.org/framasoft/peertube/official-plugins/issues",
+  "staticDirs": {},
+  "css": [
+    "assets/style.css"
+  ],
+  "clientScripts": [],
+  "translations": {}
+}
