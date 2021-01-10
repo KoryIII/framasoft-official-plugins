@@ -1,4 +1,5 @@
 const LdapAuth = require('ldapauth-fork')
+const fs = require('fs');
 
 const store = {
   weight: 100
@@ -31,6 +32,14 @@ async function register ({
     type: 'input-checkbox',
     private: true,
     default: false
+  })
+
+  registerSetting({
+    name: 'custom-ca',
+    label: 'Path to LDAP Server Certificate Chain of Trust',
+    type: 'input',
+    private: true,
+    default: ''
   })
 
   registerSetting({
@@ -151,6 +160,7 @@ async function login (peertubeHelpers, settingsManager, options) {
     'insecure-tls',
     'bind-dn',
     'bind-credentials',
+    'custom-ca',
     'search-base',
     'search-filter',
     'mail-property',
@@ -167,7 +177,7 @@ async function login (peertubeHelpers, settingsManager, options) {
     return null
   }
 
-  const ldapClient = new LdapAuth({
+  let clientOpts = {
     url: settings['url'],
     bindDN: settings['bind-dn'],
     bindCredentials: settings['bind-credentials'],
@@ -179,7 +189,17 @@ async function login (peertubeHelpers, settingsManager, options) {
     tlsOptions: {
       rejectUnauthorized: settings['insecure-tls'] !== true
     }
-  })
+  };
+  if (settings['custom-ca'] && settings['insecure-tls'] !== true) {
+    try {
+      let cadata = fs.readFileSync(settings['custom-ca']);
+      clientOpts.tlsOptions['ca'] = [ cadata ];
+    } catch (nvm) {
+      logger.warn('Could not load custom CA in LDAP plugin', { nvm });
+    }
+  }
+
+  const ldapClient = new LdapAuth(clientOpts);
 
   return new Promise(res => {
     function onError (err) {
