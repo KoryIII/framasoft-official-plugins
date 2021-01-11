@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-auth-ldap",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Add LDAP support to login form in PeerTube.",
   "engine": {
     "peertube": ">=2.2.0"
