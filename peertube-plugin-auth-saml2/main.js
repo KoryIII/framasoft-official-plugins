@@ -114,6 +114,7 @@ async function register ({
 
   store.assertUrl = peertubeHelpers.config.getWebserverUrl() + '/plugins/auth-saml2/router/assert'
   router.post('/assert', (req, res) => handleAssert(peertubeHelpers, settingsManager, req, res))
+  router.get('/assert', (req, res) => handleAssert(peertubeHelpers, settingsManager, req, res))
 
   router.get('/metadata.xml', (req, res) => {
     if (!store.serviceProvider) {
@@ -261,6 +262,12 @@ async function loadSettingsAndCreateProviders (
 
 function handleAssert(peertubeHelpers, settingsManager, req, res) {
   const { logger } = peertubeHelpers
+
+  if (req.query.SAMLResponse) {
+    // This is a HTTP-redirect for a LogoutResponse and not a SamlResponse after a login request.
+    // So we do not want to assert it with post_assert as it will throw an error.
+    return res.redirect(peertubeHelpers.config.getWebserverUrl())
+  }
 
   const options = { request_body: req.body }
 
