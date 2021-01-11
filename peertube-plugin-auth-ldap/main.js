@@ -1,5 +1,5 @@
 const LdapAuth = require('ldapauth-fork')
-const fs = require('fs');
+const fs = require('fs')
 
 const store = {
   weight: 100
@@ -177,7 +177,7 @@ async function login (peertubeHelpers, settingsManager, options) {
     return null
   }
 
-  let clientOpts = {
+  const clientOpts = {
     url: settings['url'],
     bindDN: settings['bind-dn'],
     bindCredentials: settings['bind-credentials'],
@@ -189,17 +189,17 @@ async function login (peertubeHelpers, settingsManager, options) {
     tlsOptions: {
       rejectUnauthorized: settings['insecure-tls'] !== true
     }
-  };
+  }
+
   if (settings['custom-ca'] && settings['insecure-tls'] !== true) {
     try {
-      let cadata = fs.readFileSync(settings['custom-ca']);
-      clientOpts.tlsOptions['ca'] = [ cadata ];
-    } catch (nvm) {
-      logger.warn('Could not load custom CA in LDAP plugin', { nvm });
+      clientOpts.tlsOptions['ca'] = [ await fs.readFile(settings['custom-ca']) ]
+    } catch (err) {
+      logger.warn('Could not load custom CA in LDAP plugin', { err })
     }
   }
 
-  const ldapClient = new LdapAuth(clientOpts);
+  const ldapClient = new LdapAuth(clientOpts)
 
   return new Promise(res => {
     function onError (err) {
