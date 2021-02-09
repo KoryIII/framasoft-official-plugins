@@ -19,6 +19,6 @@
   "clientScripts": [],
   "translations": {},
   "dependencies": {
-    "saml2-js": "^2.0.5"
+    "saml2-js": "~3.0.1"
   }
 }
