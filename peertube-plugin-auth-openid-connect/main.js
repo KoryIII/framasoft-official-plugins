@@ -256,10 +256,14 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
 
     let role
     if (settings['role-property']) {
-      if (Array.isArray(settings['role-property'])){
-        role = parseInt('' + userInfo[settings['role-property']][0], 10);
-      } else {
-        role = parseInt('' + userInfo[settings['role-property']], 10)
+      let roleToParse = userInfo[settings['role-property']]
+      if (Array.isArray(roleToParse)) roleToParse = roleToParse[0]
+
+      role = parseInt('' + roleToParse, 10)
+
+      if (isNaN(role)) {
+        logger.error('Cannot load role ' + roleToParse + ' from OpenID: not a number.')
+        role = null
       }
     }
 
