@@ -64,6 +64,19 @@ function register ({ registerHook, peertubeHelpers }) {
     handler: params => console.log('New URL! %s.', params.path)
   })
 
+  // Modal hooks
+
+  registerHook({
+    target: 'action:modal.video-download.shown',
+    handler: () => {
+      console.log('Video download modal shown')
+
+      document.getElementById('download-torrent').checked = true
+      document.getElementById('download-direct').parentElement.style.display = 'none'
+    }
+  })
+
+
   // Fake hook
 
   registerHook({
