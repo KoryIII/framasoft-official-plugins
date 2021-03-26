@@ -80,6 +80,16 @@ async function register ({
   })
 
   registerSetting({
+    name: 'mail-property-index',
+    label: 'Mail property index',
+    type: 'input',
+    descriptionHTML:
+      'If you have many results for the email attribute, you may define the index of the result to pick:',
+    private: true,
+    default: '0'
+  })
+
+  registerSetting({
     name: 'username-property',
     label: 'Username property',
     type: 'input',
@@ -92,7 +102,8 @@ async function register ({
     label: 'Group base',
     type: 'input',
     private: true,
-    descriptionHTML: '<p>Fill the following settings to map PeerTube roles to LDAP Groups. LDAP users without any valid LDAP group will be refused login. Leave empty to let LDAP users join with default User role.</p>'
+    descriptionHTML:
+      'Fill the following settings to map PeerTube roles to LDAP Groups. LDAP users without any valid LDAP group will be refused login. Leave empty to let LDAP users join with default User role.'
   })
 
   registerSetting({
@@ -164,6 +175,7 @@ async function login (peertubeHelpers, settingsManager, options) {
     'search-base',
     'search-filter',
     'mail-property',
+    'mail-property-index',
     'username-property',
     'group-base',
     'group-filter',
@@ -238,7 +250,16 @@ async function login (peertubeHelpers, settingsManager, options) {
       username = username.replace(/[^a-z0-9._]/g, '_')
 
       let email = user[mailProperty]
-      if (Array.isArray(email)) email = email[0]
+      if (Array.isArray(email)) {
+        let emailPropertyIndex = parseInt(settings['mail-property-index'], 10)
+        if (isNaN(emailPropertyIndex) || emailPropertyIndex < 0) {
+          logger.warn(
+            `Mail property index is expected to be a positive integer, but got instead: ${settings['mail-property-index']}`
+          )
+          emailPropertyIndex = 0
+        }
+        email = email[emailPropertyIndex]
+      }
 
       if (!settings['group-base'] || !settings['group-filter']) {
         // Return user without fetching role from LDAP groups
