@@ -4,6 +4,21 @@ function register ({ registerHook, peertubeHelpers }) {
     handler: () => onApplicationInit(peertubeHelpers)
   })
 
+  registerHook({
+    target: 'action:auth-user.information-loaded',
+    handler: ({ user }) => console.log('User information loaded.', user)
+  })
+
+  registerHook({
+    target: 'action:auth-user.logged-in',
+    handler: () => console.log('User logged in.')
+  })
+
+  registerHook({
+    target: 'action:auth-user.logged-out',
+    handler: () => console.log('User logged out.')
+  })
+
   // Videos list
 
   registerHook({
@@ -76,7 +91,6 @@ function register ({ registerHook, peertubeHelpers }) {
     }
   })
 
-
   // Fake hook
 
   registerHook({
@@ -102,6 +116,9 @@ function onApplicationInit (peertubeHelpers) {
 
   peertubeHelpers.translate('User name')
    .then(translation => console.log('Translated User name by ' + translation))
+
+  peertubeHelpers.getServerConfig()
+    .then(config => console.log('Got server config.', config))
 }
 
 function addSymbolToVideoNameResult (result, symbol) {
