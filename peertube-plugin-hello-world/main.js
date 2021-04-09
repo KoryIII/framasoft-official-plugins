@@ -77,7 +77,15 @@ async function register ({
     label: 'Admin name',
     type: 'input',
     private: true,
+    descriptionHTML: 'Your admin name',
     default: defaultAdmin
+  })
+
+  registerSetting({
+    name: 'super-checkbox',
+    label: 'My super checkbox',
+    type: 'input-checkbox',
+    descriptionHTML: 'Use this super checkbox with caution'
   })
 
   registerSetting({
@@ -92,6 +100,24 @@ async function register ({
     label: 'Markdown text',
     type: 'markdown-text',
     default: false
+  })
+
+
+  registerSetting({
+    type: 'html',
+    html: '<strong>coucou</strong><br /><br />'
+  })
+
+  registerSetting({
+    name: 'select',
+    label: 'Super select',
+    type: 'select',
+    default: '3',
+    options: [
+      { value: '1', label: 'one' },
+      { value: '2', label: 'two' },
+      { value: '3', label: 'three' }
+    ]
   })
 
   const value = await storageManager.getData('toto')

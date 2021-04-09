@@ -6,7 +6,14 @@ function register ({ registerHook, peertubeHelpers }) {
 
   registerHook({
     target: 'action:video-watch.video.loaded',
-    handler: () => 'video loaded'
+    handler: ({ videojs, video, playlist }) => {
+
+      if (playlist) {
+        console.log('playlist loaded')
+      } else {
+        console.log('video loaded')
+      }
+    }
   })
 
   registerHook({

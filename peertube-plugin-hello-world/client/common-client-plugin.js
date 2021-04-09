@@ -1,4 +1,4 @@
-function register ({ registerHook, peertubeHelpers }) {
+function register ({ registerHook, registerSettingsScript, peertubeHelpers }) {
   registerHook({
     target: 'action:application.init',
     handler: () => onApplicationInit(peertubeHelpers)
@@ -98,6 +98,18 @@ function register ({ registerHook, peertubeHelpers }) {
     handler: () => console.log('fake hook')
   })
 
+
+  // Settings
+
+  registerSettingsScript({
+    isSettingHidden: options => {
+      if (options.setting.name === 'my-markdown-area' && options.formValues.select === '2') {
+        return true
+      }
+
+      return false
+    }
+  })
 }
 
 export {
