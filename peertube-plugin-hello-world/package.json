@@ -3,7 +3,7 @@
   "version": "0.0.18",
   "description": "Hello world PeerTube plugin example",
   "engine": {
-    "peertube": ">=2.2.0"
+    "peertube": ">=3.2.0"
   },
   "keywords": [
     "peertube",
