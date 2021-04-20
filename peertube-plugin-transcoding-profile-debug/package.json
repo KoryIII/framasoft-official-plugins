@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-transcoding-profile-debug",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Plugin to help developers to debug transcoding profiles",
   "engine": {
     "peertube": ">=3.1.0"
