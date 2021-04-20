@@ -64,7 +64,7 @@ async function update (peertubeHelpers, transcodingManager, settingsManager) {
           }
         }
 
-        transcodingManager.addVODProfile(profile.encoderName, profile.profileName, builder)
+        transcodingManager.addLiveProfile(profile.encoderName, profile.profileName, builder)
       }
     } catch (err) {
       peertubeHelpers.logger.error('Cannot add profile settings.', { err, profilesString })
