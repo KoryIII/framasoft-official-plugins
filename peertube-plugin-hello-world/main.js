@@ -105,7 +105,7 @@ async function register ({
 
   registerSetting({
     type: 'html',
-    html: '<strong>coucou</strong><br /><br />'
+    html: '<strong class="toto">coucou</strong><br /><br />'
   })
 
   registerSetting({

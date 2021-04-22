@@ -6,7 +6,15 @@ function register ({ registerHook, registerSettingsScript, peertubeHelpers }) {
 
   registerHook({
     target: 'action:auth-user.information-loaded',
-    handler: ({ user }) => console.log('User information loaded.', user)
+    handler: ({ user }) => {
+      console.log('User information loaded.', user)
+
+      fetch('/api/v1/users/me', {
+        method: 'GET',
+        headers: peertubeHelpers.getAuthHeader()
+      }).then(res => res.json())
+        .then(data => console.log('Hi %s.', data.username))
+    }
   })
 
   registerHook({
