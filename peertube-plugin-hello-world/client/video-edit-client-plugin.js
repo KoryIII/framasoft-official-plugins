@@ -2,15 +2,27 @@ function register ({ registerHook, registerVideoField }) {
   console.log('loading video edit stuff')
 
   {
-    const commonOptions = {
+    const commonOptions1 = {
       name: 'hello-world-field',
       label: 'Super field',
       type: 'input',
       default: 'hello'
     }
 
+    const commonOptions2 = {
+      name: 'hello-world-field-2',
+      label: 'Super field 2',
+      type: 'input',
+      hidden: ({ liveVideo, videoToUpdate, formValues }) => {
+        console.log('check hidden field', { videoToUpdate, liveVideo, formValues })
+
+        return formValues.pluginData['hello-world-field'] === 'toto'
+      }
+    }
+
     for (const type of [ 'upload', 'import-url', 'update' ]) {
-      registerVideoField(commonOptions, { type })
+      registerVideoField(commonOptions1, { type })
+      registerVideoField(commonOptions2, { type })
     }
   }
 
