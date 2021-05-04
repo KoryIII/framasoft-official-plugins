@@ -23,6 +23,7 @@ async function register ({
     name: 'url',
     label: 'URL',
     type: 'input',
+    descriptionHTML: 'Starting with <em>ldap://</em> or <em>ldaps://</em>',
     private: true
   })
 
@@ -116,21 +117,21 @@ async function register ({
 
   registerSetting({
     name: 'group-admin',
-    label: 'Administrator group',
+    label: 'Administrator group DN',
     type: 'input',
     private: true
   })
 
   registerSetting({
     name: 'group-mod',
-    label: 'Moderator group',
+    label: 'Moderator group DN',
     type: 'input',
     private: true
   })
 
   registerSetting({
     name: 'group-user',
-    label: 'User group',
+    label: 'User group DN',
     type: 'input',
     private: true
   })
