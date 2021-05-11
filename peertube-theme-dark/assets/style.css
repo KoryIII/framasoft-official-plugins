@@ -2,7 +2,10 @@ body {
   --mainBackgroundColor: #111111;
   --mainForegroundColor: #fff;
 
+  /* Compat with PeerTube < 3.2 */
   --submenuColor: rgb(32, 32, 32);
+
+  --submenuBackgroundColor: rgb(32, 32, 32);
 
   --inputForegroundColor: #fff;
   --inputBackgroundColor: gray;
