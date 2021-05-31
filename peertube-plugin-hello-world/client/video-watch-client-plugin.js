@@ -13,6 +13,16 @@ function register ({ registerHook, peertubeHelpers }) {
       } else {
         console.log('video loaded')
       }
+
+      // Insert element next to the player
+      {
+        const elem = document.createElement('div')
+        elem.className = 'hello-world-h4'
+        elem.innerHTML = '<h4>Hello everybody! This is an element next to the player</h4>'
+        elem.style = 'background-color: red; '
+
+        document.getElementById('plugin-placeholder-player-next').appendChild(elem)
+      }
     }
   })
 
@@ -54,15 +64,6 @@ function register ({ registerHook, peertubeHelpers }) {
   })
 
   peertubeHelpers.notifier.info('you are on the watch page', 'useless', 1000)
-
-  // Insert element next to the player
-  {
-    const elem = document.createElement('div')
-    elem.className = 'hello-world-h4'
-    elem.innerHTML = '<h4>Hello everybody! This is an element next to the player</h4>'
-
-    document.getElementById('plugin-placeholder-player-next').appendChild(elem)
-  }
 }
 
 export {
