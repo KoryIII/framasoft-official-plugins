@@ -9,3 +9,5 @@ l'Éducation et de la Jeunesse" (french Ministry of National Education).
 
 The callback URL to configure on the OIDC provider side is: <your-instance-url>/plugins/auth-openid-connect/router/code-cb
 If you don't specifie a role attribute new users will have a 'User' role by default. If you use this attribute it should hold an integer from this set of values: 0 (Administrator), 1 (Moderator), 2 (User).
+
+With `group-property` and `allowed-group` you can allow only a subset of users to login.
