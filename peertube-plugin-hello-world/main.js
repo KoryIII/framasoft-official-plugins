@@ -46,30 +46,30 @@ async function register ({
   })
 
   {
-    const fieldName = 'hello-world-field'
+    for (const fieldName of [ 'hello-world-field', 'hello-world-field-2', 'hello-world-field-3' ]) {
+      registerHook({
+        target: 'action:api.video.updated',
+        handler: ({ video, body }) => {
+          if (!body.pluginData) return
 
-    registerHook({
-      target: 'action:api.video.updated',
-      handler: ({ video, body }) => {
-        if (!body.pluginData) return
+          storageManager.storeData(fieldName + '-' + video.id, body.pluginData[fieldName])
+        }
+      })
 
-        storageManager.storeData(fieldName + '-' + video.id, body.pluginData[fieldName])
-      }
-    })
+      registerHook({
+        target: 'filter:api.video.get.result',
+        handler: async (video) => {
+          if (!video) return video
 
-    registerHook({
-      target: 'filter:api.video.get.result',
-      handler: async (video) => {
-        if (!video) return video
+          if (!video.pluginData) video.pluginData = {}
 
-        if (!video.pluginData) video.pluginData = {}
+          const result = await storageManager.getData(fieldName + '-' + video.id)
+          video.pluginData[fieldName] = result
 
-        const result = await storageManager.getData(fieldName + '-' + video.id)
-        video.pluginData[fieldName] = result
-
-        return video
-      }
-    })
+          return video
+        }
+      })
+    }
   }
 
   registerSetting({

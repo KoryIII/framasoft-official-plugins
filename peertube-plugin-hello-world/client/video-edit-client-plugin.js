@@ -20,9 +20,16 @@ function register ({ registerHook, registerVideoField }) {
       }
     }
 
+    const commonOptions3 = {
+      name: 'hello-world-field-3',
+      label: 'Super field 3',
+      type: 'input-checkbox'
+    }
+
     for (const type of [ 'upload', 'import-url', 'update' ]) {
       registerVideoField(commonOptions1, { type })
       registerVideoField(commonOptions2, { type })
+      registerVideoField(commonOptions3, { type })
     }
   }
 

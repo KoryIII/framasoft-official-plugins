@@ -80,6 +80,26 @@ function register ({ registerHook, registerSettingsScript, peertubeHelpers }) {
     }
   })
 
+  registerHook({
+    target: 'filter:left-menu.links.create.result',
+    handler: (result) => {
+      return [
+        {
+          key: 'in-my-stuff',
+          title: 'In my stuff',
+          links: [
+              {
+              path: '/about',
+              icon: 'alert',
+              shortLabel: 'About',
+              label: 'About'
+            }
+          ]
+        }
+      ].concat(result)
+    }
+  })
+
   // Router hooks
 
   registerHook({

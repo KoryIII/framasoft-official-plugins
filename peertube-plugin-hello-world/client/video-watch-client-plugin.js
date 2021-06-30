@@ -63,6 +63,14 @@ function register ({ registerHook, peertubeHelpers }) {
     }
   })
 
+  registerHook({
+    target: 'filter:internal.player.videojs.options.result',
+    handler: (options) => {
+      options.poster = ''
+      return options
+    }
+  })
+
   peertubeHelpers.notifier.info('you are on the watch page', 'useless', 1000)
 }
 
