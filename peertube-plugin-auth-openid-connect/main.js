@@ -99,7 +99,7 @@ async function register ({
     label: 'Group property',
     type: 'input',
     private: true,
-    descriptionHTML: 'Property/claim that contains a users groups'
+    descriptionHTML: 'Property/claim that contains user groups (array)'
   })
 
   registerSetting({
@@ -286,8 +286,9 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
     }
 
     if (settings['group-property'] && settings['allowed-group']) {
-      let roles = userInfo[settings['group-property']]
-      if (!roles.includes(settings['allowed-group'])) {
+      const groups = userInfo[settings['group-property']]
+
+      if (!groups.includes(settings['allowed-group'])) {
         throw {
           name: "AllowedGroupNotFound",
           message: "User is not in allowed group"
