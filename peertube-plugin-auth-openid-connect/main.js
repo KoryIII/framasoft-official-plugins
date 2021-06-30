@@ -94,6 +94,22 @@ async function register ({
     private: true
   })
 
+  registerSetting({
+    name: 'group-property',
+    label: 'Group property',
+    type: 'input',
+    private: true,
+    descriptionHTML: 'Property/claim that contains a users groups'
+  })
+
+  registerSetting({
+    name: 'allowed-group',
+    label: 'Allowed group',
+    type: 'input',
+    private: true,
+    descriptionHTML: 'Will only allow login for users whose group array contains this group'
+  })
+
   const router = getRouter()
   router.use('/code-cb', (req, res) => handleCb(peertubeHelpers, settingsManager, req, res))
 
@@ -249,7 +265,9 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
       'mail-property',
       'username-property',
       'display-name-property',
-      'role-property'
+      'role-property',
+      'group-property',
+      'allowed-group'
     ])
 
     logger.debug('Got userinfo from openid auth.', { userInfo, settings })
@@ -264,6 +282,16 @@ async function handleCb (peertubeHelpers, settingsManager, req, res) {
       if (isNaN(role)) {
         logger.error('Cannot load role ' + roleToParse + ' from OpenID: not a number.')
         role = null
+      }
+    }
+
+    if (settings['group-property'] && settings['allowed-group']) {
+      let roles = userInfo[settings['group-property']]
+      if (!roles.includes(settings['allowed-group'])) {
+        throw {
+          name: "AllowedGroupNotFound",
+          message: "User is not in allowed group"
+        }
       }
     }
 
