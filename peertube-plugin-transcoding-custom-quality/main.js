@@ -38,8 +38,10 @@ async function register ({
     options: [
       { label: 'Default', value: 23 },
       { label: 'Good', value: 20 },
-      { label: 'Very good', value: 18 }
+      { label: 'Very good', value: 17 },
+      { label: 'Excellent', value: 14 }
     ],
+    descriptionHTML: 'Increasing quality will result in bigger video sizes',
     private: true,
     default: defaultCRF
   })

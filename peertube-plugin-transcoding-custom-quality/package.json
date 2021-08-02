@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-transcoding-custom-quality",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Set a custom quality for transcoding",
   "engine": {
     "peertube": ">=3.3.0"
@@ -14,7 +14,7 @@
   "bugs": "https://framagit.org/framasoft/peertube/official-plugins/issues",
   "library": "./main.js",
   "staticDirs": {},
-  "css": [ ],
+  "css": [],
   "clientScripts": [],
   "translations": {}
 }
