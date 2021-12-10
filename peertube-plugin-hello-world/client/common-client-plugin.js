@@ -1,4 +1,4 @@
-function register ({ registerHook, registerSettingsScript, peertubeHelpers }) {
+function register ({ registerHook, registerSettingsScript, registerClientRoute, peertubeHelpers }) {
   registerHook({
     target: 'action:application.init',
     handler: () => onApplicationInit(peertubeHelpers)
@@ -88,11 +88,18 @@ function register ({ registerHook, registerSettingsScript, peertubeHelpers }) {
           key: 'in-my-stuff',
           title: 'In my stuff',
           links: [
-              {
+            {
               path: '/about',
               icon: 'alert',
               shortLabel: 'About',
               label: 'About'
+            },
+
+            {
+              path: peertubeHelpers.getBasePluginClientPath() + '/my-super/route',
+              icon: '',
+              shortLabel: 'super route',
+              label: 'Super route'
             }
           ]
         }
@@ -136,6 +143,15 @@ function register ({ registerHook, registerSettingsScript, peertubeHelpers }) {
       }
 
       return false
+    }
+  })
+
+  // Routes
+
+  registerClientRoute({
+    route: 'my-super/route',
+    onMount: ({ rootEl }) => {
+      rootEl.innerHTML = 'hello'
     }
   })
 }

@@ -71,6 +71,19 @@ function register ({ registerHook, peertubeHelpers }) {
     }
   })
 
+  for (const hook of [
+    'filter:api.video-watch.video-playlist-elements.get.result'
+  ]) {
+    registerHook({
+      target: hook,
+      handler: (result) => {
+        console.log('Running hook %s', hook, result)
+
+        return result
+      }
+    })
+  }
+
   peertubeHelpers.notifier.info('you are on the watch page', 'useless', 1000)
 }
 
