@@ -48,21 +48,13 @@ async function update (peertubeHelpers, transcodingManager, settingsManager) {
       const profiles = JSON.parse(profilesString)
 
       for (const profile of profiles.vod) {
-        const builder = () => {
-          return {
-            outputOptions: profile.outputOptions
-          }
-        }
+        const builder = () => buildResult(profile)
 
         transcodingManager.addVODProfile(profile.encoderName, profile.profileName, builder)
       }
 
       for (const profile of profiles.live) {
-        const builder = () => {
-          return {
-            outputOptions: profile.outputOptions
-          }
-        }
+        const builder = () => buildResult(profile)
 
         transcodingManager.addLiveProfile(profile.encoderName, profile.profileName, builder)
       }
@@ -90,4 +82,12 @@ async function update (peertubeHelpers, transcodingManager, settingsManager) {
 
 async function removePrevious (transcodingManager) {
   transcodingManager.removeAllProfilesAndEncoderPriorities()
+}
+
+function buildResult (profile) {
+  return {
+    outputOptions: profile.outputOptions,
+    inputOptions: profile.inputOptions,
+    scaleFilter: profile.scaleFilter
+  }
 }
