@@ -86,6 +86,7 @@ async function removePrevious (transcodingManager) {
 
 function buildResult (profile) {
   return {
+    copy: profile.copy,
     outputOptions: profile.outputOptions,
     inputOptions: profile.inputOptions,
     scaleFilter: profile.scaleFilter
