@@ -146,7 +146,7 @@ module.exports = {
 // ############################################################################
 
 async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager) {
-  const { logger, config } = peertubeHelpers
+  const { logger } = peertubeHelpers
 
   if (store.client) {
     unregisterExternalAuth('openid-connect')
@@ -191,8 +191,6 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
 
   store.client = new issuer.Client(clientOptions)
 
-  const webserverUrl = config.getWebserverUrl()
-
   const result = registerExternalAuth({
     authName: 'openid-connect',
     authDisplayName: () => store.authDisplayName,
@@ -211,7 +209,7 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
         })
 
         const cookieOptions = {
-          secure: webserverUrl.startsWith('https://'),
+          secure: true,
           httpOnly: true,
           sameSite: 'none',
           maxAge: 1000 * 60 * 10 // 10 minutes
