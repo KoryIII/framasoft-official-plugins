@@ -26,10 +26,26 @@ function register ({ registerHook, registerVideoField }) {
       type: 'input-checkbox'
     }
 
+    const commonOptions4 = {
+      name: 'hello-world-field-4',
+      label: 'Super field 4 in main tab',
+      type: 'input-checkbox',
+      hidden: ({ formValues }) => {
+        return formValues['privacy'] !== 1 && formValues['privacy'] !== 2
+      },
+      error: ({ formValues, value }) => {
+        if (formValues['privacy'] !== 1 && formValues['privacy'] !== 2) return { error: false }
+        if (value === true) return { error: false }
+
+        return { error: true, text: 'Should be enabled' }
+      }
+    }
+
     for (const type of [ 'upload', 'import-url', 'update' ]) {
       registerVideoField(commonOptions1, { type })
       registerVideoField(commonOptions2, { type })
       registerVideoField(commonOptions3, { type })
+      registerVideoField(commonOptions4, { type, tab: 'main' })
     }
   }
 

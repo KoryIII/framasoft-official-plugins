@@ -125,7 +125,12 @@ async function register ({
     if (settings['auth-display-name']) store.authDisplayName = settings['auth-display-name']
   })
 
-  await loadSettingsAndCreateClient(registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager)
+  try {
+    await loadSettingsAndCreateClient(registerExternalAuth, unregisterExternalAuth, peertubeHelpers, settingsManager)
+  } catch (err) {
+    logger.error('Cannot load settings and create open id client.', { err })
+  }
+
   store.authDisplayName = await settingsManager.getSetting('auth-display-name')
 }
 
