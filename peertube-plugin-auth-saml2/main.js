@@ -1,4 +1,4 @@
-const saml2 = require('saml2-js')
+const saml2 = require('@peertube/saml2-js')
 const crypto = require('crypto')
 
 const store = {

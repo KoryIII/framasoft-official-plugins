@@ -19,6 +19,6 @@
   "clientScripts": [],
   "translations": {},
   "dependencies": {
-    "saml2-js": "~3.0.1"
+    "@peertube/saml2-js": "^3.0.2"
   }
 }
