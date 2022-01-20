@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-hello-world",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Hello world PeerTube plugin example",
   "engine": {
     "peertube": ">=3.2.0"
@@ -23,31 +23,51 @@
   "clientScripts": [
     {
       "script": "client/common-client-plugin.js",
-      "scopes": [ "common" ]
+      "scopes": [
+        "common"
+      ]
     },
     {
       "script": "client/video-watch-client-plugin.js",
-      "scopes": [ "video-watch" ]
+      "scopes": [
+        "video-watch"
+      ]
     },
     {
       "script": "client/search-client-plugin.js",
-      "scopes": [ "search" ]
+      "scopes": [
+        "search"
+      ]
     },
     {
       "script": "client/login-client-plugin.js",
-      "scopes": [ "login" ]
+      "scopes": [
+        "login"
+      ]
+    },
+    {
+      "script": "client/signup-client-plugin.js",
+      "scopes": [
+        "signup"
+      ]
     },
     {
       "script": "client/embed-client-plugin.js",
-      "scopes": [ "embed" ]
+      "scopes": [
+        "embed"
+      ]
     },
     {
       "script": "client/video-edit-client-plugin.js",
-      "scopes": [ "video-edit" ]
+      "scopes": [
+        "video-edit"
+      ]
     },
     {
       "script": "client/admin-plugin-client-plugin.js",
-      "scopes": [ "admin-plugin" ]
+      "scopes": [
+        "admin-plugin"
+      ]
     }
   ],
   "translations": {
