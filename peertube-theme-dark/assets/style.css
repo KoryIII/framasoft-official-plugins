@@ -26,3 +26,13 @@ body {
 
   --channelBackgroundColor: rgb(32, 32, 32);
 }
+
+
+.icon-logo {
+  min-width: 29px;
+  min-height: 29px;
+  background-color: #fff;
+  background-origin: content-box;
+  border-radius: 20px;
+  padding: 3px 4px 3px 8px;
+}
