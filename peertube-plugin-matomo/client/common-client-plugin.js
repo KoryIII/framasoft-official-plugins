@@ -41,6 +41,13 @@ function initMatomo (registerHook, peertubeHelpers) {
           window._paq.push(['trackPageView']);
         }
       })
+
+      registerHook({
+        target: 'action:video-watch.player.loaded',
+        handler: function () {
+          window._paq.push(['MediaAnalytics::scanForMedia', window.document]);
+        }
+      })
     })
 
 }
