@@ -1,22 +1,27 @@
 body {
   --mainBackgroundColor: #111111;
-  --mainForegroundColor: #fff;
+  --mainForegroundColor: #e0e0e1;
+
+  --mainBackgroundHoverColor: #30343b;
 
   /* Compat with PeerTube < 3.2 */
   --submenuColor: rgb(32, 32, 32);
 
   --submenuBackgroundColor: rgb(32, 32, 32);
 
-  --inputForegroundColor: #fff;
-  --inputBackgroundColor: gray;
-  --inputPlaceholderColor: #fff;
+  --inputForegroundColor: #e0e0e1;
+  --inputBackgroundColor: #30363d;
+  --inputPlaceholderColor: #e0e0e1;
 
-  --textareaForegroundColor: #fff;
-  --textareaBackgroundColor: gray;
-  --markdownTextareaBackgroundColor: gray;
+  --textareaForegroundColor: #e0e0e1;
+  --textareaBackgroundColor: #30363d;
+  --markdownTextareaBackgroundColor: #30363d;
 
-  --greyForegroundColor: gray;
-  --actionButtonColor: gray;
+  --greyForegroundColor: #bbb;
+  --greyBackgroundColor: #232830;
+  --greySecondaryBackgroundColor: #30343b;
+
+  --actionButtonColor: #bbb;
   --activatedActionButtonColor: #fff;
 
   --channelBackgroundColor: rgb(32, 32, 32);
