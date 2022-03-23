@@ -14,19 +14,9 @@ async function init (registerHook, peertubeHelpers) {
   if (!success) return
 
   registerHook({
-    target: 'action:router.navigation-end',
-    handler: function (params) {
-      window._paq.push(['setDocumentTitle', window.document.title]);
-      window._paq.push(['setCustomUrl', params.path]);
-      window._paq.push(['trackPageView']);
-    }
-  })
-
-  registerHook({
-    target: 'action:video-watch.player.loaded',
+    target: 'action:embed.player.loaded',
     handler: function () {
       window._paq.push(['MediaAnalytics::scanForMedia', window.document]);
     }
   })
 }
-
