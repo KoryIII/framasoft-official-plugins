@@ -1,5 +1,5 @@
 const LdapAuth = require('ldapauth-fork')
-const fs = require('fs')
+const fs = require('fs/promises')
 
 const store = {
   weight: 100
