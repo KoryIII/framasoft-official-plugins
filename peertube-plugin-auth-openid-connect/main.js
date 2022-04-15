@@ -110,6 +110,14 @@ async function register ({
     descriptionHTML: 'Will only allow login for users whose group array contains this group'
   })
 
+  registerSetting({
+    name: 'signature-algorithm',
+    label: 'Token signature algorithm',
+    type: 'input',
+    private: true,
+    default: 'RS256'
+  })
+
   const router = getRouter()
   router.use('/code-cb', (req, res) => handleCb(peertubeHelpers, settingsManager, req, res))
 
@@ -159,7 +167,8 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
     'scope',
     'discover-url',
     'client-id',
-    'client-secret'
+    'client-secret',
+    'signature-algorithm'
   ])
 
   if (!settings['discover-url']) {
@@ -180,7 +189,9 @@ async function loadSettingsAndCreateClient (registerExternalAuth, unregisterExte
   const clientOptions = {
     client_id: settings['client-id'],
     redirect_uris: [ store.redirectUrl ],
-    response_types: [ 'code' ]
+    response_types: [ 'code' ],
+    id_token_signed_response_alg: settings['signature-algorithm'],
+    authorization_signed_response_alg: settings['signature-algorithm']
   }
 
   if (settings['client-secret']) {
