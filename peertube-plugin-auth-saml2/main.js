@@ -328,10 +328,16 @@ async function buildUser (settingsManager, samlUser) {
   let username = findInUser(samlUser, settings['username-property']) || ''
   username = username.replace(/[^a-z0-9._]/g, '_')
 
+  let sent_role = findInUser(samlUser, settings['role-property'])
+  let parsed_role = parseInt(sent_role, 10)
+  if (!Number.isSafeInteger(parsed_role)) {
+    parsed_role = undefined
+  }
+
   return {
     username,
     email: findInUser(samlUser, settings['mail-property']),
     displayName: findInUser(samlUser, settings['display-name-property']),
-    role: findInUser(samlUser, settings['role-property'])
+    role: parsed_role
   }
 }
