@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-auth-saml2",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Add SAML 2 support to login form in PeerTube.",
   "engine": {
     "peertube": ">=3.0.0"
