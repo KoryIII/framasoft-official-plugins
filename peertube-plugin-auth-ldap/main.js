@@ -248,6 +248,7 @@ async function login (peertubeHelpers, settingsManager, options) {
       }
 
       let username = user[usernameProperty] || ''
+      username = username.toLowerCase()
       username = username.replace(/[^a-z0-9._]/g, '_')
 
       let email = user[mailProperty]
