@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-matomo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Matomo plugin that tracks page views on a PeerTube instance.",
   "engine": {
     "peertube": ">=4.2.0"
