@@ -3,7 +3,7 @@
   "version": "2.3.1",
   "description": "PeerTube dark theme",
   "engine": {
-    "peertube": ">=2.2.0"
+    "peertube": ">=4.2.0"
   },
   "keywords": [
     "peertube",

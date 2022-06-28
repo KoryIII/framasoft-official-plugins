@@ -11,7 +11,7 @@ body {
 
   --inputForegroundColor: #e0e0e1;
   --inputBackgroundColor: #30363d;
-  --inputPlaceholderColor: #e0e0e1;
+  --inputPlaceholderColor: #aaa;
 
   --textareaForegroundColor: #e0e0e1;
   --textareaBackgroundColor: #30363d;
@@ -25,6 +25,7 @@ body {
   --activatedActionButtonColor: #fff;
 
   --channelBackgroundColor: rgb(32, 32, 32);
+  --mainColorVeryLight: #30363d;
 }
 
 
@@ -35,4 +36,13 @@ body {
   background-origin: content-box;
   border-radius: 20px;
   padding: 3px 4px 3px 8px;
+}
+
+.dropdown-menu,
+.dropdown-divider {
+  border-color: var(--inputBorderColor);
+}
+
+.dropdown-header {
+  color: var(--mainForegroundColor);
 }
