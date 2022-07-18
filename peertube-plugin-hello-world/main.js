@@ -27,7 +27,7 @@ async function register ({
     handler: (result, params) => {
       if (result.allowed === false) return result
 
-      if (params && params.body.email.includes('laposte.net')) {
+      if (params && params.body && params.body.email.includes('laposte.net')) {
         return { allowed: false, errorMessage: 'laposte.net emails are not allowed on this instance' }
       }
 
