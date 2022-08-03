@@ -71,6 +71,13 @@ function register ({ registerHook, peertubeHelpers }) {
     }
   })
 
+  registerHook({
+    target: 'action:video-watch.video-threads.loaded',
+    handler: () => {
+      console.log('Comments found.', document.querySelectorAll('.comment'));
+    }
+  })
+
   for (const hook of [
     'filter:api.video-watch.video-playlist-elements.get.result'
   ]) {

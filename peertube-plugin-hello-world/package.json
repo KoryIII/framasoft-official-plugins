@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-hello-world",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Hello world PeerTube plugin example",
   "engine": {
     "peertube": ">=3.2.0"
@@ -67,6 +67,12 @@
       "script": "client/admin-plugin-client-plugin.js",
       "scopes": [
         "admin-plugin"
+      ]
+    },
+    {
+      "script": "client/video-channel-client-plugin.js",
+      "scopes": [
+        "video-channel"
       ]
     }
   ],
