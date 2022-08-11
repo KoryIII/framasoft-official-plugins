@@ -91,6 +91,45 @@ function register ({ registerHook, peertubeHelpers }) {
     })
   }
 
+  // ---------------------------------------------------------------------------
+  // Share modal
+  // ---------------------------------------------------------------------------
+
+  for (const hook of [
+    'filter:share.video-embed-code.build.result',
+    'filter:share.video-playlist-embed-code.build.result',
+    'filter:share.video-embed-url.build.result',
+    'filter:share.video-playlist-embed-url.build.result',
+    'filter:share.video-url.build.result',
+    'filter:share.video-playlist-url.build.result',
+  ]) {
+    registerHook({
+      target: hook,
+      handler: (result) => {
+        return result + hook
+      }
+    })
+  }
+
+  registerHook({
+    target: 'action:modal.share.shown',
+    handler: ({ video, playlist }) => {
+      if (video) {
+        const elem = document.createElement('div')
+        elem.innerHTML = 'video ' + video.name
+        document.getElementById('plugin-placeholder-share-modal-video-settings').appendChild(elem)
+      }
+
+      if (playlist) {
+        const elem = document.createElement('div')
+        elem.innerHTML = 'playlist ' + playlist.displayName
+        document.getElementById('plugin-placeholder-share-modal-playlist-settings').appendChild(elem)
+      }
+    }
+  })
+
+  // ---------------------------------------------------------------------------
+
   peertubeHelpers.notifier.info('you are on the watch page', 'useless', 1000)
 }
 
