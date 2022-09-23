@@ -68,6 +68,21 @@ async function register ({
       })
     }
   })
+
+  registerHook({
+    target: 'filter:api.user.signup.allowed.result',
+    handler: (result, params) => {
+      if (!akismetClient) return result
+      if (!result.allowed) return result
+      if (!params.body) return result
+
+      return checkSignup(peertubeHelpers, {
+        ip: params.ip,
+        username: params.body.username,
+        email: params.body.email
+      })
+    }
+  })
 }
 
 async function unregister () {
@@ -111,13 +126,10 @@ async function updateSettings (peertubeHelpers, settings) {
 async function checkLocalComment (peertubeHelpers, options) {
   const { logger } = peertubeHelpers
 
-  const accepted = { accepted: true }
-  const rejected = { accepted: false, errorMessage: 'SPAM detected from Akismet' }
-
   for (const key of [ 'ip', 'text', 'commentType', 'author', 'authorEmail' ]) {
     if (!options[key]) {
       logger.error('Cannot check local comment from Akismet without ' + key)
-      return accepted
+      return accept()
     }
   }
 
@@ -137,24 +149,21 @@ async function checkLocalComment (peertubeHelpers, options) {
     const isSpam = await akismetClient.checkSpam(comment)
     logger.info('Checking local comment from Akismet.', { comment, isSpam })
 
-    if (isSpam) return rejected
+    if (isSpam) return reject()
   } catch (err) {
     logger.error('Cannot reach Akismet.', { err, comment })
   }
 
-  return accepted
+  return accept()
 }
 
 async function checkRemoteComment (peertubeHelpers, options) {
   const { logger } = peertubeHelpers
 
-  const accepted = { accepted: true }
-  const rejected = { accepted: false }
-
   for (const key of [ 'text' ]) {
     if (!options[key]) {
       logger.error('Cannot check local comment from Akismet without ' + key)
-      return accepted
+      return accept()
     }
   }
 
@@ -169,10 +178,56 @@ async function checkRemoteComment (peertubeHelpers, options) {
     const isSpam = await akismetClient.checkSpam(comment)
     logger.info('Checking remote comment from Akismet.', { comment, isSpam })
 
-    if (isSpam) return rejected
+    if (isSpam) return reject()
   } catch (err) {
     logger.error('Cannot reach Akismet.', { err, comment })
   }
 
-  return accepted
+  return accept()
+}
+
+async function checkSignup (peertubeHelpers, options) {
+  const { logger } = peertubeHelpers
+
+  for (const key of [ 'ip', 'username', 'email' ]) {
+    if (!options[key]) {
+      logger.error('Cannot check signup from Akismet without ' + key)
+      return allow()
+    }
+  }
+
+  // https://github.com/chrisfosterelli/akismet-api/blob/master/docs/comments.md
+  const payload = {
+    ip: options.ip,
+    type: 'signup',
+    name: options.username,
+    email: options.email,
+  }
+
+  try {
+    const isSpam = await akismetClient.checkSpam(payload)
+    logger.info('Checking signup from Akismet.', { payload, isSpam })
+
+    if (isSpam) return forbid()
+  } catch (err) {
+    logger.error('Cannot reach Akismet.', { err, payload })
+  }
+
+  return allow()
+}
+
+function accept () {
+  return { accepted: true }
+}
+
+function reject () {
+  return { accepted: false, errorMessage: 'SPAM detected from Akismet' }
+}
+
+function allow () {
+  return { allowed: true }
+}
+
+function forbid () {
+  return { allowed: false, errorMessage: 'SPAM detected from Akismet' }
 }
