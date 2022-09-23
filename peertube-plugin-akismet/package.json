@@ -1,0 +1,23 @@
+{
+  "name": "peertube-plugin-akismet",
+  "version": "0.0.1",
+  "description": "Reject comments based on Akismet service",
+  "engine": {
+    "peertube": ">=4.3.0"
+  },
+  "keywords": [
+    "peertube",
+    "plugin"
+  ],
+  "homepage": "https://framagit.org/framasoft/peertube/official-plugins/tree/master/peertube-plugin-akismet",
+  "author": "Chocobozzz",
+  "bugs": "https://framagit.org/framasoft/peertube/official-plugins/issues",
+  "library": "./main.js",
+  "staticDirs": {},
+  "css": [],
+  "clientScripts": [],
+  "translations": {},
+  "dependencies": {
+    "akismet-api": "^5.3.0"
+  }
+}
