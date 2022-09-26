@@ -25,7 +25,7 @@ body {
   --activatedActionButtonColor: #fff;
 
   --channelBackgroundColor: rgb(32, 32, 32);
-  --mainColorVeryLight: #30363d;
+  --mainColorVeryLight: #292121;
 }
 
 
@@ -45,4 +45,8 @@ body {
 
 .dropdown-header {
   color: var(--mainForegroundColor);
+}
+
+.accordion-button {
+  background-color: #292121;
 }
