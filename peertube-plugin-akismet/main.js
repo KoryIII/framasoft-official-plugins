@@ -162,7 +162,7 @@ async function checkRemoteComment (peertubeHelpers, options) {
 
   for (const key of [ 'text' ]) {
     if (!options[key]) {
-      logger.error('Cannot check local comment from Akismet without ' + key)
+      logger.error('Cannot check remote comment from Akismet without ' + key)
       return accept()
     }
   }
