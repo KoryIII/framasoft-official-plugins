@@ -66,6 +66,8 @@ function register ({ registerHook, peertubeHelpers }) {
   registerHook({
     target: 'filter:internal.player.videojs.options.result',
     handler: (options) => {
+      console.log(options.plugins.p2pMediaLoader)
+
       options.poster = ''
       return options
     }

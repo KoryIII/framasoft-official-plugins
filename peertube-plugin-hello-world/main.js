@@ -1,6 +1,9 @@
+const WebSocketServer = require('ws').WebSocketServer
+
 async function register ({
   registerHook,
   getRouter,
+  registerWebSocketRoute,
   registerSetting,
   settingsManager,
   storageManager,
@@ -163,6 +166,27 @@ async function register ({
       }
     })
   }
+
+  // WebSocket
+  const wss = new WebSocketServer({ noServer: true })
+
+  wss.on('connection', function connection(ws) {
+    peertubeHelpers.logger.info('Websocket connected!')
+
+    setInterval(() => {
+      ws.send('Websocket message sent by server');
+    }, 1000)
+  })
+
+  registerWebSocketRoute({
+    route: '/toto',
+
+    handler: (request, socket, head) => {
+      wss.handleUpgrade(request, socket, head, ws => {
+        wss.emit('connection', ws, request)
+      })
+    }
+  })
 }
 
 async function unregister () {

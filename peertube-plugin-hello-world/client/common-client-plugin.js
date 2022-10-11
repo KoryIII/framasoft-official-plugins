@@ -154,6 +154,18 @@ function register ({ registerHook, registerSettingsScript, registerClientRoute, 
       rootEl.innerHTML = 'hello'
     }
   })
+
+  // WebSocket
+
+  const baseScheme = window.location.protocol === 'https:'
+    ? 'wss:'
+    : 'ws:'
+
+  const socket = new WebSocket(baseScheme + '//' + window.location.host + peertubeHelpers.getBaseWebSocketRoute() + '/toto');
+
+  socket.addEventListener('message', (event) => {
+    console.log(event.data)
+  })
 }
 
 export {
