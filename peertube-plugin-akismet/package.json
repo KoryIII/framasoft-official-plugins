@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-akismet",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Reject local comments, remote comments and registrations based on Akismet service",
   "engine": {
     "peertube": ">=4.3.0"
@@ -28,6 +28,7 @@
   ],
   "translations": {
     "fr-FR": "./languages/fr.json"
+    "ru-RU": "./languages/ru.json"
   },
   "dependencies": {
     "akismet-api": "^5.3.0"
